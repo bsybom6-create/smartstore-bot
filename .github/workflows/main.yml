@@ -1,0 +1,31 @@
+name: SmartStore Automation
+
+on:
+  schedule:
+    - cron: '0 * * * *' # 매시간 정각에 실행
+  workflow_dispatch: # 수동으로 실행 버튼을 만듦
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install requests
+
+      - name: Run Script
+        env:
+          NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
+          NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
+          ALIGO_API_KEY: ${{ secrets.ALIGO_API_KEY }}
+          ALIGO_SENDER_KEY: ${{ secrets.ALIGO_SENDER_KEY }}
+          ALIGO_USER_ID: ${{ secrets.ALIGO_USER_ID }}
+        run: python bot.py
